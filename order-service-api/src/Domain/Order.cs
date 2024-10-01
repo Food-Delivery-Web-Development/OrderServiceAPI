@@ -1,6 +1,6 @@
 namespace OrderServiceAPI.src.Domain;
 
-public class OrderServiceAPI
+public class Order
 {
     public Guid Id { get; init; } = Guid.NewGuid();
     public Guid CustomerId { get; set; }
