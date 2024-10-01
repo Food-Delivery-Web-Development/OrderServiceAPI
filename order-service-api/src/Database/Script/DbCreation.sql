@@ -1,4 +1,4 @@
-CREATE TABLE Customer (
+CREATE TABLE User (
     Id UUID PRIMARY KEY,
     FullName VARCHAR(100) NOT NULL,
     Email VARCHAR(100) NOT NULL,
@@ -23,11 +23,11 @@ CREATE TABLE Product (
 
 CREATE TABLE Order (
     Id UUID PRIMARY KEY,
-    CustomerId UUID NOT NULL,
+    UserId UUID NOT NULL,
     Status VARCHAR(50) NOT NULL,
     OrderDate TIMESTAMP NOT NULL,
     TotalAmount DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (CustomerId) REFERENCES Customer(Id),
+    FOREIGN KEY (UserId) REFERENCES USer(Id),
 );
 
 CREATE TABLE OrderItem (

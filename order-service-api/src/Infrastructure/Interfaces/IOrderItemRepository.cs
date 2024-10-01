@@ -2,7 +2,7 @@ using OrderServiceAPI.src.Domain;
 
 namespace OrderServiceAPI.src.Infrastructure.Interfaces;
 
-public interface IOrderItemRepository : IRepository<OrderItem>
+public interface IOrderItemRepository : IBaseRepository<OrderItem>
 {
-    Task<IEnumerable<OrderItem>> GetUserOrderItmes(Guid id);
+    Task<IEnumerable<OrderItem>> GetUserOrderItems(Guid orderId);
 }

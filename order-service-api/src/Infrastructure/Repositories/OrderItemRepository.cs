@@ -1,32 +1,50 @@
+using Microsoft.EntityFrameworkCore;
+using OrderServiceAPI.src.Database;
 using OrderServiceAPI.src.Domain;
 using OrderServiceAPI.src.Infrastructure.Interfaces;
 
 namespace OrderServiceAPI.src.Infrastructure.Repositories;
 
-public class OrderItemRepositpry : IOrderItemRepository
+public class OrderItemRepository : IOrderItemRepository
 {
-    public Task AddAsync(OrderItem entity)
+    private readonly OrderItemDbContext _context;
+
+    public OrderItemRepository(OrderItemDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task DeleteAsync(Guid id)
+    public async Task AddAsync(OrderItem orderItem)
     {
-        throw new NotImplementedException();
+        await _context.OrderItems.AddAsync(orderItem);
+        await _context.SaveChangesAsync();
     }
 
-    public Task<OrderItem?> GetByIdAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var order = await _context.OrderItems.FindAsync(id);
+        if (order != null)
+        {
+            _context.OrderItems.Remove(order);
+            await _context.SaveChangesAsync();
+        }
     }
 
-    public Task<IEnumerable<OrderItem>> GetUserOrderItmes(Guid id)
+    public async Task<OrderItem?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        return await _context.OrderItems.FindAsync(id);
     }
 
-    public Task UpdateAsync(OrderItem entity)
+    public async Task<IEnumerable<OrderItem>> GetUserOrderItems(Guid orderId)
     {
-        throw new NotImplementedException();
+        return await _context.OrderItems
+            .Where(o => o.OrderId == orderId)
+            .ToListAsync();
+    }
+
+    public async Task UpdateAsync(OrderItem entity)
+    {
+        _context.OrderItems.Update(entity);
+        await _context.SaveChangesAsync();
     }
 }
