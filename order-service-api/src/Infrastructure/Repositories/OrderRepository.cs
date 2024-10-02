@@ -35,14 +35,14 @@ public class OrderRepository : IOrderRepository
         return await _context.Orders.FindAsync(id);
     }
 
-    public async Task<IEnumerable<Order>> GetUserOrders(Guid customerId)
+    public async Task<IEnumerable<Order>> GetUserOrdersAsync(Guid customerId)
     {
         return await _context.Orders
             .Where(o => o.CustomerId == customerId)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Order>> GetUserDayOrders(Guid customerId)
+    public async Task<IEnumerable<Order>> GetUserDayOrdersAsync(Guid customerId)
     {
         var today = DateTime.UtcNow.Date;
         return await _context.Orders
@@ -56,7 +56,7 @@ public class OrderRepository : IOrderRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task AddItemToOrder(Guid orderId, OrderItem item)
+    public async Task AddItemToOrderAsync(Guid orderId, OrderItem item)
     {
         var order = await _context.Orders.FindAsync(orderId);
         if (order != null)
@@ -67,8 +67,7 @@ public class OrderRepository : IOrderRepository
         }
     }
 
-
-    public async Task SetOrderStatus(Guid orderId, OrderStatus orderStatus)
+    public async Task SetOrderStatusAsync(Guid orderId, OrderStatus orderStatus)
     {
         var order = await _context.Orders.FindAsync(orderId);
         if (order != null)

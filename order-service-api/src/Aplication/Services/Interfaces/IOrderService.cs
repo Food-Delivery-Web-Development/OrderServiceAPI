@@ -1,8 +1,8 @@
 using OrderServiceAPI.src.Domain;
 
-namespace OrderServiceAPI.src.Infrastructure.Interfaces;
+namespace OrderServiceAPI.src.Aplication.Services.Interfaces;
 
-public interface IOrderRepository : IBaseRepository<Order>
+public interface IOrderService : IBaseService<Order>
 {
     Task<IEnumerable<Order>> GetUserOrdersAsync(Guid id);
     Task<IEnumerable<Order>> GetUserDayOrdersAsync(Guid id);
