@@ -7,9 +7,9 @@ namespace OrderServiceAPI.src.Infrastructure.Repositories;
 
 public class OrderItemRepository : IOrderItemRepository
 {
-    private readonly OrderItemDbContext _context;
+    private readonly DatabaseContext _context;
 
-    public OrderItemRepository(OrderItemDbContext context)
+    public OrderItemRepository(DatabaseContext context)
     {
         _context = context;
     }
