@@ -22,16 +22,23 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.MapControllers();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c => 
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Service API v1");
-        c.RoutePrefix = string.Empty;
+        app.UseSwaggerUI(c => 
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Order Service API v1");
+            c.RoutePrefix = "swagger";
+        });
+
     });
 }
 
-app.UseHttpsRedirection();
+
+// app.UseHttpsRedirection();
 
 app.Run();

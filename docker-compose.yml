@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 
 services:
   postgres:
@@ -22,18 +22,6 @@ services:
       - "80:80"
     depends_on:
       - postgres
-
-  db_init:
-    image: postgres
-    depends_on:
-      - postgres
-    volumes:
-      - ./src/Database/Script:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: deliveryapp
-    entrypoint: ["sh", "-c", "until pg_isready -h postgres; do sleep 2; done; PGPASSWORD=$$POSTGRES_PASSWORD psql -h postgres -U $$POSTGRES_USER -d $$POSTGRES_DB -f /docker-entrypoint-initdb.d/DbCreation.sql"]
 
 volumes:
   pgdata:
