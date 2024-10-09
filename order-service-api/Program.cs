@@ -4,6 +4,7 @@ using OrderServiceAPI.src.Aplication.Services.Interfaces;
 using OrderServiceAPI.src.Database;
 using OrderServiceAPI.src.Infrastructure.Interfaces;
 using OrderServiceAPI.src.Infrastructure.Repositories;
+using src.Presentation.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
+builder.Services.AddAutoMapper(typeof(OrderItemProfile));
+builder.Services.AddAutoMapper(typeof(OrderProfile));
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));

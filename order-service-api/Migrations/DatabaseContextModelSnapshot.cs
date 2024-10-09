@@ -8,7 +8,7 @@ using OrderServiceAPI.src.Database;
 
 #nullable disable
 
-namespace OrderServiceAPI.Migrations
+namespace orderserviceapi.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
     partial class DatabaseContextModelSnapshot : ModelSnapshot
@@ -67,25 +67,7 @@ namespace OrderServiceAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
-
                     b.ToTable("OrderItems");
-                });
-
-            modelBuilder.Entity("OrderServiceAPI.src.Domain.OrderItem", b =>
-                {
-                    b.HasOne("OrderServiceAPI.src.Domain.Order", "Order")
-                        .WithMany("Items")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("OrderServiceAPI.src.Domain.Order", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

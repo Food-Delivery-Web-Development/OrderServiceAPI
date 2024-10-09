@@ -55,26 +55,4 @@ public class OrderRepository : IOrderRepository
         _context.Orders.Update(entity);
         await _context.SaveChangesAsync();
     }
-
-    public async Task AddItemToOrderAsync(Guid orderId, OrderItem item)
-    {
-        var order = await _context.Orders.FindAsync(orderId);
-        if (order != null)
-        {
-            order.Items.Add(item);
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-        }
-    }
-
-    public async Task SetOrderStatusAsync(Guid orderId, OrderStatus orderStatus)
-    {
-        var order = await _context.Orders.FindAsync(orderId);
-        if (order != null)
-        {
-            order.Status = orderStatus;
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-        }
-    }
 }

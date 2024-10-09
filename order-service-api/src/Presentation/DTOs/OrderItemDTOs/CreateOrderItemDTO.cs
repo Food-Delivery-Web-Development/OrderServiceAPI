@@ -1,8 +1,9 @@
-namespace OrderServiceAPI.src.Domain;
+using OrderServiceAPI.src.Domain;
 
-public class OrderItem
+namespace src.Presentation.DTOs.OrderItemDTOs;
+
+public class CreateOrderItemDTO 
 {
-    public Guid Id { get; init; }  = Guid.NewGuid();
     public Guid OrderId { get; set; }
     public Guid ProductId { get; set; }
     public int Quantity { get; set; }
