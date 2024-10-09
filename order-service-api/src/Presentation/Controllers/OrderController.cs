@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OrderServiceAPI.src.Aplication.Services.Interfaces;
 using OrderServiceAPI.src.Domain;
+using src.Presentation.DTOs.OrderDTOs;
 
 namespace OrderServiceAPI.src.Presentation.Controllers
 {
@@ -9,17 +11,23 @@ namespace OrderServiceAPI.src.Presentation.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IOrderItemService _orderItemService;
+        private readonly IMapper _mapper;
 
-        public OrderController(IOrderService orderService)
+        public OrderController(IOrderService orderService, IOrderItemService orderItemService, IMapper mapper)
         {
             _orderService = orderService;
+            _orderItemService = orderItemService;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrder([FromBody] Order order)
+        public async Task<IActionResult> AddOrder([FromBody] CreateOrderDTO orderDTO)
         {
-            if (order == null)
+            if (orderDTO == null)
                 return BadRequest("Order cannot be null");
+
+            var order = _mapper.Map<Order>(orderDTO);
 
             await _orderService.AddAsync(order);
             return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, order);
@@ -55,29 +63,18 @@ namespace OrderServiceAPI.src.Presentation.Controllers
             return Ok(orders);
         }
 
-        [HttpPut("{id}/status")]
-        public async Task<IActionResult> SetOrderStatus(Guid id, [FromBody] OrderStatus status)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] UpdateOrderDTO orderDTO)
         {
             var order = await _orderService.GetByIdAsync(id);
             if (order == null)
                 return NotFound("Order not found");
 
-            await _orderService.SetOrderStatusAsync(id, status);
-            return NoContent();
-        }
+            order.Status = orderDTO.Status;
+            order.TotalAmount = orderDTO.TotalAmount;
 
-        [HttpPut("{id}/addItem")]
-        public async Task<IActionResult> AddItemToOrder(Guid id, [FromBody] OrderItem item)
-        {
-            if (item == null)
-                return BadRequest("Order item cannot be null");
-
-            var order = await _orderService.GetByIdAsync(id);
-            if (order == null)
-                return NotFound("Order not found");
-
-            await _orderService.AddItemToOrderAsync(id, item);
-            return NoContent();
+            await _orderService.UpdateAsync(order);
+            return Ok(order);
         }
 
         [HttpDelete("{id}")]

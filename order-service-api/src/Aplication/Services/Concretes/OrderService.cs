@@ -18,10 +18,6 @@ public class OrderService : IOrderService
         await _orderRepository.AddAsync(entity);
     }
 
-    public async Task AddItemToOrderAsync(Guid orderId, OrderItem item)
-    {
-        await _orderRepository.AddItemToOrderAsync(orderId, item);
-    }
 
     public async Task DeleteAsync(Guid id)
     {
@@ -41,11 +37,6 @@ public class OrderService : IOrderService
     public async Task<IEnumerable<Order>> GetUserOrdersAsync(Guid id)
     {
         return await _orderRepository.GetUserOrdersAsync(id);
-    }
-
-    public async Task SetOrderStatusAsync(Guid orderId, OrderStatus orderStatus)
-    {
-        await _orderRepository.SetOrderStatusAsync(orderId, orderStatus);
     }
 
     public async Task UpdateAsync(Order entity)

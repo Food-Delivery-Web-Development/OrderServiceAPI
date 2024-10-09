@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OrderServiceAPI.src.Aplication.Services.Interfaces;
 using OrderServiceAPI.src.Domain;
+using src.Presentation.DTOs.OrderItemDTOs;
 
 namespace OrderServiceAPI.src.Presentation.Controllers
 {
@@ -9,17 +11,27 @@ namespace OrderServiceAPI.src.Presentation.Controllers
     public class OrderItemController : ControllerBase
     {
         private readonly IOrderItemService _orderItemService;
+        private readonly IOrderService _orderService;
+        private readonly IMapper _mapper;
 
-        public OrderItemController(IOrderItemService orderItemService)
+        public OrderItemController(IOrderItemService orderItemService, IOrderService orderService, IMapper mapper)
         {
             _orderItemService = orderItemService;
+            _orderService = orderService;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrderItem([FromBody] OrderItem orderItem)
+        public async Task<IActionResult> AddOrderItem([FromBody] CreateOrderItemDTO orderItemDTO)
         {
-            if (orderItem == null)
+            if (orderItemDTO == null)
                 return BadRequest("Order item cannot be null");
+
+            var order = await _orderService.GetByIdAsync(orderItemDTO.OrderId);
+            if(order == null)
+                return NotFound("Order not found");
+
+            var orderItem = _mapper.Map<OrderItem>(orderItemDTO);
 
             await _orderItemService.AddAsync(orderItem);
             return CreatedAtAction(nameof(GetOrderItemById), new { id = orderItem.Id }, orderItem);
@@ -46,17 +58,20 @@ namespace OrderServiceAPI.src.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrderItem(Guid id, [FromBody] OrderItem orderItem)
+        public async Task<IActionResult> UpdateOrderItem(Guid id, [FromBody] UpdateOrderItemDTO orderItemDTO)
         {
-            if (orderItem == null || id != orderItem.Id)
+            if (orderItemDTO == null)
                 return BadRequest("Invalid order item data");
 
             var existingOrderItem = await _orderItemService.GetByIdAsync(id);
             if (existingOrderItem == null)
                 return NotFound("Order item not found");
 
-            await _orderItemService.UpdateAsync(orderItem);
-            return NoContent();
+            existingOrderItem.Quantity = orderItemDTO.Quantity;
+            existingOrderItem.UnitPrice = orderItemDTO.UnitPrice;
+
+            await _orderItemService.UpdateAsync(existingOrderItem);
+            return Ok(existingOrderItem);
         }
 
         [HttpDelete("{id}")]

@@ -23,11 +23,6 @@ namespace OrderServiceAPI.src.Database
                 entity.Property(u => u.Status).IsRequired();
                 entity.Property(u => u.OrderDate).HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(u => u.TotalAmount).IsRequired();
-
-                entity.HasMany(o => o.Items)
-                    .WithOne(oi => oi.Order)
-                    .HasForeignKey(oi => oi.OrderId)
-                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<OrderItem>(entity =>
